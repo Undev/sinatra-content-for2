@@ -2,12 +2,12 @@
 
 Gem::Specification.new do |s|
   s.name    = "sinatra-content-for2"
-  s.version = "0.2.2"
-  s.date    = "2010-12-03"
+  s.version = "0.2.3"
+  s.date    = "2011-01-13"
 
   s.description = "Small Sinatra extension to add a content_for helper similar to Rails'"
   s.summary     = "Small Sinatra extension to add a content_for helper similar to Rails'"
-  s.homepage    = "http://sinatrarb.com"
+  s.homepage    = "https://github.com/Undev/sinatra-content-for2"
 
   s.authors = ["Nicolás Sanguinetti"]
   s.email   = "contacto@nicolassanguinetti.info"
