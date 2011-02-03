@@ -158,4 +158,34 @@ haml_end
       assert_equal "<i>1</i>\n2\n", last_response.body
     end
   end
+
+  context 'content_for?' do
+    class TestApp
+      include Sinatra::ContentFor
+    end
+
+    setup do
+      @helper = TestApp.new 
+    end
+
+    context 'defined content' do
+      setup do
+        @helper.instance_variable_set(:@content_blocks, {:test => ["block"]})
+      end
+
+      it 'returns true' do
+        assert_equal @helper.content_for?(:test), true
+      end
+    end
+
+    context 'undefined content' do
+      setup do
+        @helper.instance_variable_set(:@content_blocks, {:test => []})
+      end
+
+      it 'returns false' do
+        assert_equal @helper.content_for?(:test), false
+      end
+    end
+  end
 end
