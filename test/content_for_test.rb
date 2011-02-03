@@ -9,6 +9,7 @@ end
 
 require 'contest'
 require 'sinatra'
+require 'erubis'
 require 'haml'
 require 'rack/test'
 
@@ -17,14 +18,16 @@ begin
 rescue LoadError
 end
 
-require File.expand_path('lib/sinatra/content_for')
+$LOAD_PATH.unshift('./lib')
+
+require 'sinatra/content_for2'
 
 Sinatra::Base.set :environment, :test
 
 module Sinatra
   class Base
     set :environment, :test
-    helpers ContentFor
+    helpers ContentFor2
   end
 end
 
@@ -45,8 +48,8 @@ class Test::Unit::TestCase
 end
 
 class ContentForTest < Test::Unit::TestCase
-  context 'using erb' do
-    def erb_app(view)
+  context 'using erubis' do
+    def erubis_app(view)
       mock_app {
         layout { '<% yield_content :foo %>' }
         get('/') { erb view } 
@@ -54,7 +57,7 @@ class ContentForTest < Test::Unit::TestCase
     end
 
     it 'renders blocks declared with the same key you use when rendering' do
-      erb_app '<% content_for :foo do %>foo<% end %>'
+      erubis_app '<% content_for :foo do %>foo<% end %>'
 
       get '/'
       assert last_response.ok?
@@ -62,7 +65,7 @@ class ContentForTest < Test::Unit::TestCase
     end
 
     it 'does not render a block with a different key' do
-      erb_app '<% content_for :bar do %>bar<% end %>'
+      erubis_app '<% content_for :bar do %>bar<% end %>'
 
       get '/'
       assert last_response.ok?
@@ -70,7 +73,7 @@ class ContentForTest < Test::Unit::TestCase
     end
 
     it 'renders multiple blocks with the same key' do
-      erb_app <<-erb_snippet
+      erubis_app <<-erb_snippet
         <% content_for :foo do %>foo<% end %>
         <% content_for :foo do %>bar<% end %>
         <% content_for :baz do %>WON'T RENDER ME<% end %>
@@ -161,7 +164,7 @@ haml_end
 
   context 'content_for?' do
     class TestApp
-      include Sinatra::ContentFor
+      include Sinatra::ContentFor2
     end
 
     setup do
