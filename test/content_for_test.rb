@@ -8,15 +8,16 @@ rescue LoadError
 end
 
 require 'contest'
-require 'sinatra/test'
+require 'sinatra'
 require 'haml'
+require 'rack/test'
 
 begin
   require 'redgreen'
 rescue LoadError
 end
 
-require File.dirname(__FILE__) + '/../lib/sinatra/content_for'
+require File.expand_path('lib/sinatra/content_for')
 
 Sinatra::Base.set :environment, :test
 
@@ -28,7 +29,7 @@ module Sinatra
 end
 
 class Test::Unit::TestCase
-  include Sinatra::Test
+  include Rack::Test::Methods
 
   class << self
     alias_method :it, :test
@@ -36,6 +37,10 @@ class Test::Unit::TestCase
 
   def mock_app(base=Sinatra::Base, &block)
     @app = Sinatra.new(base, &block)
+  end
+
+  def app
+    @app
   end
 end
 
@@ -52,16 +57,16 @@ class ContentForTest < Test::Unit::TestCase
       erb_app '<% content_for :foo do %>foo<% end %>'
 
       get '/'
-      assert ok?
-      assert_equal 'foo', body
+      assert last_response.ok?
+      assert_equal 'foo', last_response.body
     end
 
     it 'does not render a block with a different key' do
       erb_app '<% content_for :bar do %>bar<% end %>'
 
       get '/'
-      assert ok?
-      assert_equal '', body
+      assert last_response.ok?
+      assert_equal '', last_response.body
     end
 
     it 'renders multiple blocks with the same key' do
@@ -73,8 +78,8 @@ class ContentForTest < Test::Unit::TestCase
       erb_snippet
 
       get '/'
-      assert ok?
-      assert_equal 'foobarbaz', body
+      assert last_response.ok?
+      assert_equal 'foobarbaz', last_response.body
     end
 
     it 'passes values to the blocks' do
@@ -84,8 +89,8 @@ class ContentForTest < Test::Unit::TestCase
       }
 
       get '/'
-      assert ok?
-      assert_equal '<i>1</i> 2', body
+      assert last_response.ok?
+      assert_equal '<i>1</i> 2', last_response.body
     end
   end
 
@@ -104,8 +109,8 @@ class ContentForTest < Test::Unit::TestCase
 haml_end
 
       get '/'
-      assert ok?
-      assert_equal "foo\n", body
+      assert last_response.ok?
+      assert_equal "foo\n", last_response.body
     end
 
     it 'does not render a block with a different key' do
@@ -115,8 +120,8 @@ haml_end
 haml_end
 
       get '/'
-      assert ok?
-      assert_equal "\n", body
+      assert last_response.ok?
+      assert_equal "\n", last_response.body
     end
 
     it 'renders multiple blocks with the same key' do
@@ -132,8 +137,8 @@ haml_end
 haml_end
 
       get '/'
-      assert ok?
-      assert_equal "foo\nbar\nbaz\n", body
+      assert last_response.ok?
+      assert_equal "foo\nbar\nbaz\n", last_response.body
     end
 
     it 'passes values to the blocks' do
@@ -149,8 +154,38 @@ haml_end
       }
 
       get '/'
-      assert ok?
-      assert_equal "<i>1</i>\n2\n", body
+      assert last_response.ok?
+      assert_equal "<i>1</i>\n2\n", last_response.body
+    end
+  end
+
+  context 'content_for?' do
+    class TestApp
+      include Sinatra::ContentFor
+    end
+
+    setup do
+      @helper = TestApp.new 
+    end
+
+    context 'defined content' do
+      setup do
+        @helper.instance_variable_set(:@content_blocks, {:test => ["block"]})
+      end
+
+      it 'returns true' do
+        assert_equal @helper.content_for?(:test), true
+      end
+    end
+
+    context 'undefined content' do
+      setup do
+        @helper.instance_variable_set(:@content_blocks, {:test => []})
+      end
+
+      it 'returns false' do
+        assert_equal @helper.content_for?(:test), false
+      end
     end
   end
 end
