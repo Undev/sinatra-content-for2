@@ -29,6 +29,8 @@ so if you have problems with that, make sure to check for this.
 
 <B>Note</b> Use <tt><%= yield_content ... %></tt> in Erubis.
 
+Also we provide content_for? method that checks that block is defined.
+
 == Usage
 
 If you're writing "classic" style apps, then requring 
@@ -51,3 +53,5 @@ Code by foca[http://github.com/foca], inspired on the Ruby on Rails
 helpers with the same name. Haml support by mattly[http://github.com/mattly].
 Erubis support by hiroyuki[http://github.com/hryk].
 Bundler/etc. unicode compatibility by arnabc[https://github.com/arnabc] and akzhan[https://github.com/akzhan].
+content_for? method by BrunoGrasselli[https://github.com/BrunoGrasselli].
+
