@@ -1,4 +1,3 @@
 doc/
-dist/
-tmp/
-*.swp
+pkg/
+*.sw?
