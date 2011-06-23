@@ -1,28 +1,22 @@
-require "rake/testtask"
-
-begin
-  require "hanna/rdoctask"
-rescue LoadError
-  require "rake/rdoctask"
-end
+require "rake/rdoctask"
 
 begin
   require "metric_fu"
 rescue LoadError
 end
 
+desc "Default: run all specs"
+task :default => :spec
+
 begin
-  require "mg"
-  MG.new("sinatra-content-for.gemspec")
+  require 'rspec/core/rake_task'
+
+  RSpec::Core::RakeTask.new do |t|
+    t.rspec_opts = ["-c", "-f progress", "-r ./spec/spec_helper.rb"]
+    t.pattern = 'spec/**/*_spec.rb'
+  end
 rescue LoadError
-end
-
-desc "Default: run all tests"
-task :default => :test
-
-desc "Run library tests"
-Rake::TestTask.new do |t|
-  t.test_files = FileList['test/**/*_test.rb']
+  $stderr.puts "Please install RSpec 2"
 end
 
 Rake::RDocTask.new do |rd|
