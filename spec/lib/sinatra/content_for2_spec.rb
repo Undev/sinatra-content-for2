@@ -23,20 +23,13 @@ describe Sinatra::ContentFor2 do
     end
   end
 
-  [ :erb, :haml, :erubis ].each do |engine|
+  [ :erb, :erubis, :haml, :slim ].each do |engine|
     it "should render #{engine} template" do
-      erubis_was = Erubis
-      if engine == :erb
-        Object.send(:remove_const, :Erubis)
-      end
       sr = templates.send(engine, :sub, :layout => false, :eat_errors => false)
       sr.should_not =~ /sub/
       r = templates.send(engine, :main, :layout => false, :eat_errors => false)
       r.should =~ /main/
       r.should =~ /sub/
-      if engine == :erb
-        Object.const_set(:Erubis, erubis_was)
-      end
     end
   end
 end
