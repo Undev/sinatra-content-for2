@@ -1,8 +1,13 @@
 #encoding: utf-8
 
+$LOAD_PATH << File.expand_path('../lib', __FILE__)
+
+require 'sinatra/content_for2/version'
+
 Gem::Specification.new do |s|
   s.name    = "sinatra-content-for2"
-  s.version = "0.2.4"
+  s.version = Gem::Version.new(Sinatra::ContentFor2::VERSION)
+
   s.date = Time.now.strftime('%Y-%m-%d')
 
   s.description = "Small Sinatra extension to add a content_for helper similar to Rails'"
@@ -19,6 +24,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "sinatra"
   s.add_development_dependency "rake"
+  s.add_development_dependency "yard"
   s.add_development_dependency "rspec-core"
   s.add_development_dependency "rspec-expectations"
   s.add_development_dependency "rr"
