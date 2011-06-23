@@ -11,10 +11,7 @@ task :default => :spec
 begin
   require 'rspec/core/rake_task'
 
-  RSpec::Core::RakeTask.new do |t|
-    t.rspec_opts = ["-c", "-f progress", "-r ./spec/spec_helper.rb"]
-    t.pattern = 'spec/**/*_spec.rb'
-  end
+  RSpec::Core::RakeTask.new
 rescue LoadError
   $stderr.puts "Please install RSpec 2"
 end
@@ -25,3 +22,4 @@ Rake::RDocTask.new do |rd|
   rd.rdoc_files.include("README.rdoc", "LICENSE", "lib/**/*.rb")
   rd.rdoc_dir = "doc"
 end
+
