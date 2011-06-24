@@ -1,6 +1,6 @@
 source :rubygems
 
-gem "ripper", :platforms => :mri_18
+gem "ripper", :group => :development, :platforms => :mri_18
 
 gemspec
 
