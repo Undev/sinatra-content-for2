@@ -6,7 +6,7 @@ require 'sinatra/content_for2/version'
 
 Gem::Specification.new do |s|
   s.name    = "sinatra-content-for2"
-  s.version = Gem::Version.new(Sinatra::ContentFor2::VERSION)
+  s.version = Gem::Version.new(Sinatra::ContentFor2::VERSION.dup)
 
   s.date = Time.now.strftime('%Y-%m-%d')
 
