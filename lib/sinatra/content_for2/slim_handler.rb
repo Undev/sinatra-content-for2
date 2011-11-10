@@ -10,7 +10,7 @@ class Sinatra::ContentFor2::SlimHandler < Sinatra::ContentFor2::BaseHandler
   end
 
   attr_reader :output_buffer
-  
+
   def initialize(template)
     super
     self.class.setup_slim
